@@ -9,7 +9,7 @@ import Foundation
 
 
 /// A structure that contains the location and dimensions of a rectangle.
-public struct IntRect: Equatable {
+public struct IntRect: Equatable, Hashable, Codable {
 	/// A point that specifies the coordinates of the rectangle’s origin.
 	public var origin: IntPoint
 	/// A size that specifies the height and width of the rectangle.

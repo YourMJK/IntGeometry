@@ -9,7 +9,7 @@ import Foundation
 
 
 /// A structure that contains a point in a two-dimensional coordinate system.
-public struct IntPoint: Equatable, Hashable {
+public struct IntPoint: Equatable, Hashable, Codable {
 	/// The x-coordinate of the point.
 	public var x: Int
 	/// The y-coordinate of the point.

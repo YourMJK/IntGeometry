@@ -9,7 +9,7 @@ import Foundation
 
 
 /// A structure that contains width and height values.
-public struct IntSize: Equatable {
+public struct IntSize: Equatable, Hashable, Codable {
 	/// The width of the size.
 	public var width: Int {
 		willSet { precondition(newValue >= 0, "Width of IntSize must be positive") }
