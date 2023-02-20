@@ -104,8 +104,12 @@ public extension IntRect {
 	///            relative to the source rectangle.
 	///            If `dx` and `dy` are positive values, then the rectangle’s size is decreased.
 	///            If `dx` and `dy` are negative values, the rectangle’s size is increased.
-	func insetBy(dx: Int, dy: Int) -> IntRect {
-		IntRect(x: origin.x-dx, y: origin.y-dy, width: size.width-dx*2, height: size.height-dy*2)
+	///            If the resulting rectangle would have a negative height or width, `nil` is returned.
+	func insetBy(dx: Int, dy: Int) -> IntRect? {
+		let width = size.width-dx*2
+		let height = size.height-dy*2
+		if width < 0 || height < 0 { return nil }
+		return IntRect(origin: IntPoint(x: origin.x-dx, y: origin.y-dy), size: IntSize(width: width, height: height))
 	}
 	
 	/// Returns the smallest rectangle that contains the two source rectangles.
@@ -125,15 +129,15 @@ public extension IntRect {
 	/// To check for true two-dimensional intersection, make sure the returned rectangle is not empty with ``isEmpty`` which is equivalent to using ``intersects(_:)``.
 	/// 
 	/// - Parameter r2: Another rectangle to intersect with this rectangle.
-	/// - Returns: A rectangle that represents the intersection of the source rectangle and the specified rectangle. If the two rectangles do not intersect or touch (see discussion), returns the zero rectangle.
-	func intersection(_ r2: IntRect) -> IntRect {
+	/// - Returns: A rectangle that represents the intersection of the source rectangle and the specified rectangle. If the two rectangles do not intersect or touch (see discussion), returns `nil`.
+	func intersection(_ r2: IntRect) -> IntRect? {
 		let minX = Swift.max(self.minX, r2.minX)
 		let minY = Swift.max(self.minY, r2.minY)
 		let maxX = Swift.min(self.maxX, r2.maxX)
 		let maxY = Swift.min(self.maxY, r2.maxY)
 		let width = maxX-minX
 		let height = maxY-minY
-		if width < 0 || height < 0 { return .zero }
+		if width < 0 || height < 0 { return nil }
 		return IntRect(origin: IntPoint(x: minX, y: minY), size: IntSize(width: width, height: height))
 	}
 	
@@ -157,12 +161,12 @@ public extension IntRect {
 	}
 	/// Returns whether the two rectangles intersect.
 	/// 
-	/// The source rectangle intersects the other if the intersection of the two rectangles is not an empty rectangle.
+	/// The source rectangle intersects the other if the intersection of the two rectangles is not an empty rectangle or `nil`.
 	/// 
 	/// - Parameter rect2: The rectangle to test for intersection with this rectangle.
 	/// - Returns: `true` if the source rectangle and the specified rectangle intersect; otherwise, `false`.
 	func intersects(_ rect2: IntRect) -> Bool {
-		!intersection(rect2).isEmpty
+		!(intersection(rect2)?.isEmpty ?? true)
 	}
 }
 
